@@ -45,11 +45,6 @@ scaler = MinMaxScaler()
 scaled_train = scaler.fit_transform(train_data)
 scaled_test = scaler.transform(test_data)
 
-# use last 1000 days 
-close_prices = stock_data["Close"].values[-1000:].reshape(-1, 1)
-scaler = MinMaxScaler()
-scaled_data = scaler.fit_transform(close_prices)
-
 # hyperparameters tunning
 INPUT_WINDOW = 60
 EPOCHS = 20
@@ -128,7 +123,7 @@ print(f"\nTest RMSE on past 200 points: {rmse:.2f}")
 
 # prediction
 model.eval()
-last_window = torch.FloatTensor(scaled_data[-INPUT_WINDOW:]).unsqueeze(0).to(device)
+last_window = torch.FloatTensor(scaled_train[-INPUT_WINDOW:]).unsqueeze(0).to(device)
 with torch.no_grad():
     pred_scaled = model(last_window).cpu().numpy()
 
@@ -163,7 +158,7 @@ plt.show()
 
 # ploting the prediction
 plt.figure(figsize=(10, 5))
-plt.plot(range(INPUT_WINDOW), scaler.inverse_transform(scaled_data[-INPUT_WINDOW:]), label="Last 60 Days")
+plt.plot(range(INPUT_WINDOW), scaler.inverse_transform(scaled_train[-INPUT_WINDOW:]), label="Last 60 Days")
 plt.plot(range(INPUT_WINDOW, INPUT_WINDOW + PREDICT_DAYS), pred_prices, marker='o', label=f"Next {PREDICT_DAYS} Days")
 plt.title(f"{ticker} Forecast")
 plt.xlabel("Time (Days)")
