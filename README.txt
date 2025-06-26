@@ -3,7 +3,6 @@ How to compile and run the program:
   + Run all cells in the eda.ipynb
   + In the terminal, run any model:
     > python lstm.py
-    > 2009_lstm.py
     > 2010_lstm.py
     > 2010_lstm_2.py
 
